@@ -1,5 +1,20 @@
 import streamlit as st
 from groq import Groq
+st.markdown("""
+<style>
+.block-container {
+    padding-top: 1rem;
+    padding-bottom: 0rem;
+}
+</style>
+""", unsafe_allow_html=True)
+st.markdown("""
+<style>
+div[data-testid="stChatMessage"] {
+    margin-bottom: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # Page config
 st.set_page_config(page_title="AI Code Explainer", page_icon="💻")
@@ -7,9 +22,6 @@ st.set_page_config(page_title="AI Code Explainer", page_icon="💻")
 # API
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-# Title
-st.title("💻 AI Code Explainer")
-st.markdown("### 🚀 Chat with AI to understand your code")
 
 # Session state for chat history
 if "messages" not in st.session_state:
@@ -17,6 +29,8 @@ if "messages" not in st.session_state:
 
 # Language selector
 language = st.selectbox("Select Language", ["Python", "C", "Java", "JavaScript"])
+st.title("💻 AI Code Explainer")
+st.markdown("🚀 Chat with AI to understand your code")
 
 # Display previous chat
 for msg in st.session_state.messages:
