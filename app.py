@@ -20,6 +20,8 @@ div[data-testid="stChatMessage"] {
 
 # Sidebar
 with st.sidebar:
+    if st.button("🧹 Clear Chat"):
+        st.session_state.messages = []
     st.title("💻 AI Code Explainer")
     st.markdown("### 🚀 Features")
     st.write("✔ Explain code")
@@ -68,7 +70,7 @@ if code:
 
     # AI response
     with st.chat_message("assistant", avatar="🤖"):
-        with st.spinner("Thinking... 🤖"):
+        with st.spinner("Analyzing your code... 🤖"):
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
@@ -94,4 +96,9 @@ Code:
             answer = response.choices[0].message.content
             st.markdown(answer)
 
+            st.code(answer, language="markdown")
+
     st.session_state.messages.append({"role": "assistant", "content": answer})
+
+st.markdown("---")
+st.markdown("<center>Built with ❤️ using Streamlit + Groq</center>", unsafe_allow_html=True)
