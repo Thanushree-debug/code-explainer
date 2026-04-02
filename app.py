@@ -1,14 +1,13 @@
 import streamlit as st
 from groq import Groq
 
+
+st.set_page_config(page_title="Code Explainer", page_icon="💻")
 # Use Streamlit secrets (for deployment)
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-st.set_page_config(page_title="Code Explainer", page_icon="💻")
-
 st.title("💻 AI Code Explainer")
 st.markdown("### 🚀 Understand Code Instantly with AI")
-st.write("Paste your code below and I'll explain it!")
 
 language = st.selectbox("Select Language", ["Python", "C", "Java", "JavaScript"])
 code = st.text_area("Paste your code here", height=200)
@@ -22,7 +21,15 @@ if st.button("Try Example"):
                 messages=[
                     {
                         "role": "user",
-                        "content": f"Explain this {language} in simple beginner friendly English:\n\n{code}"
+                        "content": f"""
+Explain this {language} code in simple beginner friendly English.
+Also include:
+1. Step-by-step explanation
+2. Time complexity (Big-O)
+3. Short summary at th
+Code:
+{code}
+"""
                     }
                 ]
             )
