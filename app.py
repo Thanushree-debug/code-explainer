@@ -23,10 +23,13 @@ if st.button("Try Example"):
                         "role": "user",
                         "content": f"""
 Explain this {language} code in simple beginner friendly English.
+
 Also include:
 1. Step-by-step explanation
 2. Time complexity (Big-O)
-3. Short summary at th
+3. Any errors or bugs in the code
+4. Suggest improvements or fixes
+5. Short summary at the end
 Code:
 {code}
 """
