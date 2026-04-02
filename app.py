@@ -1,56 +1,73 @@
 import streamlit as st
 from groq import Groq
+
+# MUST be first
+st.set_page_config(page_title="AI Code Explainer", page_icon="💻", layout="wide")
+
+# CSS tweaks
 st.markdown("""
 <style>
 .block-container {
     padding-top: 1rem;
-    padding-bottom: 0rem;
 }
-</style>
-""", unsafe_allow_html=True)
-st.markdown("""
-<style>
 div[data-testid="stChatMessage"] {
+    border-radius: 12px;
+    padding: 10px;
     margin-bottom: 10px;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# Page config
-st.set_page_config(page_title="AI Code Explainer", page_icon="💻")
+# Sidebar
+with st.sidebar:
+    st.title("💻 AI Code Explainer")
+    st.markdown("### 🚀 Features")
+    st.write("✔ Explain code")
+    st.write("✔ Detect bugs")
+    st.write("✔ Suggest fixes")
+    st.write("✔ Time complexity")
+    st.markdown("---")
+    st.info("Built using Streamlit + Groq")
 
 # API
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-
-# Session state for chat history
+# Session state
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Language selector
-language = st.selectbox("Select Language", ["Python", "C", "Java", "JavaScript"])
-st.title("💻 AI Code Explainer")
-st.markdown("🚀 Chat with AI to understand your code")
+# Header (centered)
+st.markdown("""
+<h1 style='text-align: center;'>💻 AI Code Explainer</h1>
+<p style='text-align: center; color: gray;'>Understand, Debug & Improve Code Instantly</p>
+""", unsafe_allow_html=True)
 
-# Display previous chat
+# Language selector (clean placement)
+col1, col2, col3 = st.columns([1,2,1])
+with col2:
+    language = st.selectbox("🌐 Select Language", ["Python", "C", "Java", "JavaScript"])
+
+st.markdown("---")
+
+# Chat display
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
+    with st.chat_message(msg["role"], avatar="👤" if msg["role"]=="user" else "🤖"):
         if msg["role"] == "user":
             st.code(msg["content"])
         else:
             st.markdown(msg["content"])
 
-# User input
-code = st.chat_input("Paste your code here...")
+# Input
+code = st.chat_input("💬 Paste your code here and press Enter...")
 
 if code:
-    # Show user message
+    # User message
     st.session_state.messages.append({"role": "user", "content": code})
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar="👤"):
         st.code(code)
 
     # AI response
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="🤖"):
         with st.spinner("Thinking... 🤖"):
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
@@ -77,5 +94,4 @@ Code:
             answer = response.choices[0].message.content
             st.markdown(answer)
 
-    # Save AI response
     st.session_state.messages.append({"role": "assistant", "content": answer})
